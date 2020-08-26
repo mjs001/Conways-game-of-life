@@ -27,6 +27,7 @@ class Game extends React.Component {
 
     constructor() {
         super();
+        
         this.rows = HEIGHT / CELL_SIZE;
         this.cols = WIDTH / CELL_SIZE;
 
@@ -37,6 +38,7 @@ class Game extends React.Component {
         cells: [],
         isRunning: false,
         interval: 100,
+        generation: 0
     }
 
     makeEmptyBoard() {
@@ -103,9 +105,10 @@ class Game extends React.Component {
         }
     }
 
+
     runIteration() {
         let newBoard = this.makeEmptyBoard();
-
+        
         for (let y = 0; y < this.rows; y++) {
             for (let x = 0; x < this.cols; x++) {
                 let neighbors = this.calculateNeighbors(this.board, x, y);
@@ -125,9 +128,10 @@ class Game extends React.Component {
 
         this.board = newBoard;
         this.setState({ cells: this.makeCells() });
-
+              
         this.timeoutHandler = window.setTimeout(() => {
             this.runIteration();
+            this.setState({generation: this.state.generation + 1})
         }, this.state.interval);
     }
 
@@ -160,6 +164,7 @@ class Game extends React.Component {
     handleClear = () => {
         this.board = this.makeEmptyBoard();
         this.setState({ cells: this.makeCells() });
+        this.setState({ generation: 0})
     }
 
     handleRandom = () => {
@@ -176,6 +181,7 @@ class Game extends React.Component {
         const { cells, interval, isRunning } = this.state;
         return (
             <div>
+                <h2 className="gen">Generation: {this.state.generation}</h2>
                 <div className="Board"
                     style={{ width: WIDTH, height: HEIGHT, backgroundSize: `${CELL_SIZE}px ${CELL_SIZE}px`}}
                     onClick={this.handleClick}
@@ -194,6 +200,7 @@ class Game extends React.Component {
                     }
                     <button className="button" onClick={this.handleRandom}>Random</button>
                     <button className="button" onClick={this.handleClear}>Clear</button>
+                    
                 </div>
             </div>
         );
