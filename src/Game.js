@@ -1,23 +1,63 @@
 import React from 'react';
 import './Game.css';
+import { Box, Button, DropButton, Heading, Text } from 'grommet';
+import { Close } from 'grommet-icons';
 
-
-const CELL_SIZE = 20;
-const WIDTH = 800;
-const HEIGHT = 600;
-
+let CELL_SIZE = 20;
+let WIDTH = 800;
+let HEIGHT = 600;
+const smHEIGHT = 300;
+const smWIDTH = 400;
+const lgHEIGHT = 900
+const lgWIDTH = 1200
 
 class Cell extends React.Component {
+    state = {
+        default: true,
+        open: false
+    }
+    Blue = () => {
+        this.setState({default: true});
+    }
 
+    Red = () => {
+        this.setState({default: false})
+    }
     render() {
         const { x, y } = this.props;
+        const {open} = this.state
+        
         return (
-            <div className="Cell" style={{
+            <>
+           
+            {this.state.default == true ? 
+            <div className="Cell" id="Cell" style={{
                 left: `${CELL_SIZE * x + 1}px`,
                 top: `${CELL_SIZE * y + 1}px`,
                 width: `${CELL_SIZE - 1}px`,
                 height: `${CELL_SIZE - 1}px`,
+                background: "red"
             }} />
+            
+            
+            :
+            <div className="Cell" id="Cell" style={{
+                left: `${CELL_SIZE * x + 1}px`,
+                top: `${CELL_SIZE * y + 1}px`,
+                width: `${CELL_SIZE - 1}px`,
+                height: `${CELL_SIZE - 1}px`,
+                background: "blue"
+            }} />
+        }
+            
+            <div className="right">
+            { this.state.default == true ?
+            <button className="button2" onClick={this.Red}>Blue</button>
+            :
+            <button className="button2" onClick={this.Blue}>Red</button> 
+            }
+            </div>
+            </>
         );
     }
 }
@@ -28,9 +68,8 @@ class Game extends React.Component {
     constructor() {
         super();
         
-        this.rows = HEIGHT / CELL_SIZE;
-        this.cols = WIDTH / CELL_SIZE;
-
+        this.customGridDefault()
+        
         this.board = this.makeEmptyBoard();
     }
 
@@ -38,8 +77,16 @@ class Game extends React.Component {
         cells: [],
         isRunning: false,
         interval: 100,
-        generation: 0
+        generation: 0,
+        default: true
+        
     }
+
+customGridDefault = (event) => {
+    this.rows = HEIGHT / CELL_SIZE;
+    this.cols = WIDTH / CELL_SIZE; 
+}
+
 
     makeEmptyBoard() {
         let board = [];
@@ -105,6 +152,13 @@ class Game extends React.Component {
         }
     }
 
+    Blue = () => {
+        this.setState({default: true});
+    }
+
+    Red = () => {
+        this.setState({default: false})
+    }
 
     runIteration() {
         let newBoard = this.makeEmptyBoard();
@@ -177,6 +231,8 @@ class Game extends React.Component {
         this.setState({ cells: this.makeCells() });
     }
 
+
+
     render() {
         const { cells, interval, isRunning } = this.state;
         return (
@@ -200,11 +256,17 @@ class Game extends React.Component {
                     }
                     <button className="button" onClick={this.handleRandom}>Random</button>
                     <button className="button" onClick={this.handleClear}>Clear</button>
+                    <h3>Conways Game Of Life Rules:</h3>
+                    <p>1. Any live cell with fewer than two live neighbours dies, as if by underpopulation.
+                    <br/>2. Any live cell with two or three live neighbours lives on to the next generation.
+                    <br/> 3. Any live cell with more than three live neighbours dies, as if by overpopulation.
+                    <br/> 4.Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.</p>
                     
                 </div>
             </div>
         );
     }
 }
+
 
 export default Game;

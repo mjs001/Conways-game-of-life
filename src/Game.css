@@ -10,6 +10,7 @@
 .Cell {
     background: #A1EF8B;
     position: absolute;
+    border-radius: 0
 }
 
 .controls{
@@ -20,3 +21,20 @@
     margin-left: 12px;
     cursor:pointer;
 }
+
+.background{
+    width: 1000px;
+    height: 100%;
+    background-color: aqua;
+}
+
+.blue {
+    background: blue;
+}
+
+
+.right{
+    margin-left: 120%;
+
+}
+
